@@ -29,8 +29,6 @@ class NeuralNet():
 
         self.build_model()
         self.history = self.compile_and_fit()
-        self.evaluation = self.evaluate()
-        print(dict(zip(self.model.metrics_names, self.evaluation)))
 
     def build_model(self) -> None:
         input_l = keras.Input(shape=(16,))
@@ -47,26 +45,31 @@ class NeuralNet():
         self.model.compile(loss=tf.losses.CategoricalCrossentropy(),
                            optimizer=tf.optimizers.RMSprop(),
                            metrics=[tf.metrics.CategoricalAccuracy(), tfa.metrics.F1Score(
-                               num_classes=self.dataset.n_classes)],
+                               num_classes=self.dataset.n_classes, average='weighted')],
                            )
         ds = self.dataset
-        print('Training model.')
         history = self.model.fit(
             ds.train_x,
-            ds.train_labels,
+            ds.train_onehot,
             batch_size=self.batch_size,
             epochs=self.epochs,
-            validation_data=(ds.val_x, ds.val_labels),
+            validation_data=(ds.val_x, ds.val_onehot),
             callbacks=[early_stopping],
             verbose=0
         )
         return history
 
+    def predict(self, x):
+        return self.model.predict(x)
+
     def evaluate(self):
-        print('\nEvaluation:')
-        return self.model.evaluate(
-            self.dataset.test_x, self.dataset.test_labels)
+        evaluation = self.model.evaluate(
+            self.dataset.test_x, self.dataset.test_onehot, verbose=0)
+        return dict(zip(self.model.metrics_names, evaluation))
+
+    def f1_score(self):
+        return self.evaluate()['f1_score']
 
     def __str__(self) -> str:
-        return f'NN: \nlayers:{self.n_layers} \nnodes: {self.n_nodes} \
-            \nactivations: {self.activations} \nbatch size: {self.batch_size}'
+        return f'\nNN: \nlayers:{self.n_layers} \nnodes: {self.n_nodes} \
+            \nactivations: {self.activations} \nbatch size: {self.batch_size} \nf1: {self.f1_score()}'
