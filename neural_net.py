@@ -5,12 +5,13 @@ from tensorflow.keras import layers
 import random
 import numpy as np
 from prepare_dataset import Dataset
+from classifier import Classifier
 
 
-class NeuralNet():
+class NeuralNet(Classifier):
     def __init__(self, n_classes=26, min_nodes=16, max_nodes=128, epochs=100) -> None:
+        super().__init__()
         self.n_layers = random.choice([2, 3, 4])
-
         self.min_nodes = min_nodes
         self.max_nodes = max_nodes
         self.epochs = epochs
@@ -23,12 +24,10 @@ class NeuralNet():
             self.n_nodes.append(int(np.exp(x)))
             # chose activation functions
             self.activations.append(random.choice(['relu', 'tanh']))
-        self.f1_scores = []
         self.build_model(n_classes)
 
     def set_dataset(self, x_train, y_train, x_test, y_test):
-        self.x_train, self.y_train = x_train, y_train
-        self.x_test, self.y_test = x_test, y_test
+        super().set_dataset(x_train, y_train, x_test, y_test)
         # compute batch size
         x = len(self.y_train) / 100
         self.batch_size = int(2 ** (np.ceil(np.log2(x))))
@@ -41,7 +40,7 @@ class NeuralNet():
         x = layers.Dense(n_classes, activation='softmax')(x)
         self.model = keras.Model(input_l, x)
 
-    def compile_and_fit(self):
+    def fit(self):
         early_stopping = tf.keras.callbacks.EarlyStopping(
             monitor='categorical_accuracy', patience=5
         )
@@ -60,16 +59,8 @@ class NeuralNet():
         )
         self.history = history
 
-    def average_f1(self):
-        return np.mean(self.f1_scores)
-
     def predict(self, x):
         return self.model.predict(x)
-
-    def evaluate_and_save(self):
-        f1 = self.f1_score()
-        self.f1_scores.append(f1)
-        return f1
 
     def f1_score(self):
         evaluation = self.model.evaluate(
