@@ -26,23 +26,16 @@ class Dataset():
         self.n_classes = len(self.one_hot[0])
 
         # Split the dataset
-        self.train_x = self.features[0:int(self.size * 0.7)]
-        self.train_labels = self.labels[0:int(self.size * 0.7)]
-        self.val_x = self.features[int(self.size * 0.7):int(self.size * 0.85)]
-        self.val_labels = self.labels[int(
-            self.size * 0.7):int(self.size * 0.85)]
-        self.test_x = self.features[int(self.size * 0.85):]
-        self.test_labels = self.labels[int(self.size * 0.85):]
+        # self.train_x = self.features[0:int(self.size * 0.7)]
+        # self.train_labels = self.labels[0:int(self.size * 0.7)]
+        # self.train_onehot = self.one_hot[0:int(self.size * 0.7)]
 
-        self.train_onehot = self.one_hot[0:int(self.size * 0.7)]
-        self.val_onehot = self.one_hot[int(
-            self.size * 0.7):int(self.size * 0.85)]
-        self.test_onehot = self.one_hot[int(self.size * 0.85):]
+        # self.test_x = self.features[int(self.size * 0.7):]
+        # self.test_labels = self.labels[int(self.size * 0.7):]
+        # self.test_onehot = self.one_hot[int(self.size * 0.7):]
 
-    def __str__(self) -> str:
-        return f'DS: \n{self.train_x[:3]} \n{self.train_labels[:3]}\nn_classes: {self.n_classes}'
+        # self.val_onehot = self.one_hot[int(
+        #     self.size * 0.7):int(self.size * 0.85)]
 
-
-if __name__ == '__main__':
-    ds = Dataset()
-    print(ds)
+    # def __str__(self) -> str:
+    #     return f'DS: \n{self.train_x[:3]} \n{self.train_labels[:3]}\nn_classes: {self.n_classes}'

@@ -2,14 +2,15 @@ from prepare_dataset import Dataset
 from sklearn import svm
 from sklearn.metrics import f1_score
 import random
+import numpy as np
 
 
 class SVM():
     """
     """
 
-    def __init__(self, dataset: Dataset) -> None:
-        self.ds = dataset
+    def __init__(self) -> None:
+
         self.kernel = random.choice(['poly', 'rbf'])
         # Decreasing C corresponds to more regularization.
         self.C = random.uniform(2**-5, 2**5)
@@ -19,8 +20,6 @@ class SVM():
             self.coef = random.uniform(3, 5)
         else:
             self.gamma = 'auto'
-
-        # train SVM
         self.model = svm.SVC(
             C=self.C,
             kernel=self.kernel,
@@ -28,15 +27,27 @@ class SVM():
             gamma=self.gamma,
             probability=True
         )
-        self.model.fit(self.ds.train_x, self.ds.train_labels)
+        self.f1_scores = []
 
-    def evaluate(self):
-        predictions = self.model.predict(self.ds.test_x)
-        f1 = f1_score(self.ds.test_labels, predictions, average='weighted')
-        return f1
+    def set_dataset(self, x_train, y_train, x_test, y_test):
+        self.x_train, self.y_train = x_train, y_train
+        self.x_test, self.y_test = x_test, y_test
+
+    def fit(self):
+        self.model.fit(self.x_train, self.y_train)
 
     def f1_score(self):
-        return self.evaluate()
+        predictions = self.model.predict(self.x_test)
+        f1 = f1_score(self.y_test, predictions, average='weighted')
+        return f1
+
+    def evaluate_and_save(self):
+        f1 = self.f1_score()
+        self.f1_scores.append(f1)
+        return f1
+
+    def average_f1(self):
+        return np.mean(self.f1_scores)
 
     def predict(self, x):
         """Returns a probability vector over the classes. 
@@ -48,4 +59,4 @@ class SVM():
     def __str__(self) -> str:
 
         return f'\nSVM: \nkernel: {self.kernel} \nC: {self.C} \ngamma: {self.gamma} \
-            \ncoef: {self.coef} \nf1: {self.f1_score()}'
+            \ncoef: {self.coef} \nf1: {self.evaluate()()}'
