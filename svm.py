@@ -5,9 +5,13 @@ import random
 
 
 class SVM():
+    """
+    """
+
     def __init__(self, dataset: Dataset) -> None:
         self.ds = dataset
         self.kernel = random.choice(['poly', 'rbf'])
+        # Decreasing C corresponds to more regularization.
         self.C = random.uniform(2**-5, 2**5)
         self.coef = 0.0  # default
         self.gamma = 'scale'  # default
@@ -35,8 +39,11 @@ class SVM():
         return self.evaluate()
 
     def predict(self, x):
-        # Returns class labels
-        return self.model.predict(x)
+        """Returns a probability vector over the classes. 
+        Note: The probability model is created using cross validation, 
+        so the results can be slightly different than those obtained by predict.
+        """
+        return self.model.predict_proba(x)
 
     def __str__(self) -> str:
 
