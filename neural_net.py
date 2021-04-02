@@ -43,7 +43,7 @@ class NeuralNet():
 
     def compile_and_fit(self):
         early_stopping = tf.keras.callbacks.EarlyStopping(
-            monitor='val_categorical_accuracy', patience=5
+            monitor='categorical_accuracy', patience=5
         )
         self.model.compile(loss=tf.losses.CategoricalCrossentropy(),
                            optimizer=tf.optimizers.RMSprop(),
@@ -55,7 +55,6 @@ class NeuralNet():
             self.y_train,
             batch_size=self.batch_size,
             epochs=self.epochs,
-            validation_data=(self.x_test, self.y_test),
             callbacks=[early_stopping],
             verbose=0
         )
