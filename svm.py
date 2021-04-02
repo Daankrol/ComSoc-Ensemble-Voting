@@ -21,7 +21,8 @@ class SVM():
             C=self.C,
             kernel=self.kernel,
             coef0=self.coef,
-            gamma=self.gamma
+            gamma=self.gamma,
+            probability=True
         )
         self.model.fit(self.ds.train_x, self.ds.train_labels)
 

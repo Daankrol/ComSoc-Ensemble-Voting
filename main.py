@@ -5,11 +5,11 @@ from svm import SVM
 
 dataset = Dataset()
 
-neural_net = NeuralNet(dataset)
-print(neural_net)
+# neural_net = NeuralNet(dataset)
+# print(neural_net)
 
 tree = DecisionTree(dataset)
 print(tree)
 
-svm = SVM(dataset)
-print(svm)
+# svm = SVM(dataset)
+# print(svm)
