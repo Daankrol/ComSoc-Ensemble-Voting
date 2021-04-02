@@ -5,6 +5,7 @@ from decision_tree import DecisionTree
 from svm import SVM
 from sklearn.model_selection import KFold
 import numpy as np
+from voting_rules import *
 
 n_experiments = 1
 n_kfold_splits = 2
@@ -44,6 +45,10 @@ for exp in range(n_experiments):
         dp.set_dataset(x_train, y_train_labels, x_test, y_test_labels)
         dp.fit()
         print('DP: ', dp.evaluate_and_save())
+
+        # compute f1 score based on voting rule
+        rankings = [c.get_ranking() for c in classifiers]
+        # outcome = plurality(rankings)
 
     avg = [c.average_f1() for c in classifiers]
     print(avg)
