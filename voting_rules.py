@@ -29,7 +29,6 @@ def STV(rankings):
     num_classifiers = len(rankings)
     num_classes = len(rankings[0][0])
     for exp in range(num_examples):
-        print('exp: ', exp)
         rankings_modified = rankings
         winner = [0] * num_classes
         for i in range(len(winner)):
@@ -52,7 +51,7 @@ def STV(rankings):
 #           Update the rankings of the classifiers (of niet want ik faal)
             idx = np.where(rankings_modified[classifier][exp] == loser)
             np.delete(rankings_modified[classifier][exp], idx[0][0])
-            print('rankings_modified: (of toch niet) ', rankings_modified[classifier][exp])
+            # print('rankings_modified: (of toch niet) ', rankings_modified[classifier][exp])
         result.append(winner[0])
     return index_to_label(result)
 
