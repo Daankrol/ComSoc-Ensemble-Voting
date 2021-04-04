@@ -30,7 +30,8 @@ for opt, arg in opts:
 
 
 n_kfold_splits = 10
-exp_evaluation = []
+exp_evaluation_plurality = []
+exp_evaluation_svt = []
 
 
 for exp in range(n_experiments):
@@ -67,10 +68,17 @@ for exp in range(n_experiments):
 
         # compute f1 score based on voting rule
         rankings = np.array([c.get_ranking() for c in classifiers])
-        outcome = plurality(rankings)
-        f1 = f1_score(y_test_labels, outcome, average='weighted')
-        print(f1)
-        exp_evaluation.append(f1)
+        outcome_plurality = plurality(rankings)
+        outcome_SVT = STV(rankings)
+        f1_plurality = f1_score(y_test_labels, outcome_plurality, average='weighted')
+        f1_SVT = f1_score(y_test_labels, outcome_SVT, average='weighted')
+        print('Plurality: ', f1_plurality)
+        print('SVT: ', f1_SVT)
+        exp_evaluation_plurality.append(f1_plurality)
+        exp_evaluation_svt.append(f1_SVT)
 
-final_f1 = np.mean(exp_evaluation)
-print(f'final average f1: {final_f1}')
+final_f1_plurality = np.mean(exp_evaluation_plurality)
+final_f1_SVT = np.mean(exp_evaluation_svt)
+print('plurality final average f1:', {final_f1_plurality})
+print('SVT final average f1:', {final_f1_SVT})
+
