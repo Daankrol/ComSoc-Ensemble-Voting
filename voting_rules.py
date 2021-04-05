@@ -20,38 +20,51 @@ def plurality(rankings):
         # In case of multiple occurrences of the maximum values, the indices corresponding to the first occurrence are returned.
         winner = np.argmax(histo)
         result.append(winner)
+    # print('Final result plurality: ', result)
     return index_to_label(result)
+
+
 
 
 def STV(rankings):
     result = []
-    num_examples = len(rankings[0])
     num_classifiers = len(rankings)
+    num_examples = len(rankings[0])
     num_classes = len(rankings[0][0])
     for exp in range(num_examples):
-        rankings_modified = rankings
+        rankings_modified = np.copy(rankings)
         winner = [0] * num_classes
         for i in range(len(winner)):
             winner[i] = i
         losers = []
+        # remove classes from winner array until only winner remains
         while len(winner) > 1:
             score = [0] * num_classes
+            # add a point for the top choice of every classifier
             for classifier in range(num_classifiers):
-                score[rankings_modified[classifier][exp][0]] += 1
+                elected = -1
+                for i in range(num_classes):
+                    if rankings_modified[classifier][exp][i] != -1:
+                        elected = rankings_modified[classifier][exp][i]
+                        break
+                score[elected] += 1
             loser_score = num_classifiers + 1
             loser = 0
+            # find class with fewest votes, mark as loser
             for idx in range(num_classes):
-                if score[idx] < loser_score:
+                if score[idx] <= loser_score:
                     if idx not in losers:
                         loser_score = score[idx]
                         loser = idx
 #           remove loser from winner, add to losers
             losers.append(loser)
             winner.remove(loser)
-#           Update the rankings of the classifiers (of niet want ik faal)
-            idx = np.where(rankings_modified[classifier][exp] == loser)
-            np.delete(rankings_modified[classifier][exp], idx[0][0])
-            # print('rankings_modified: (of toch niet) ', rankings_modified[classifier][exp])
+#           Update the rankings of the classifiers
+            for classifier in range(num_classifiers):
+                idx = np.where(rankings_modified[classifier][exp] == loser)
+                rankings_modified[classifier][exp][idx[0][0]] = -1
         result.append(winner[0])
+    # print('Final result SVT: ', result)
     return index_to_label(result)
+
 
