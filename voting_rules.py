@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def index_to_label(indices: list):
@@ -27,10 +28,10 @@ def plurality(rankings):
 
 
 def STV(rankings):
-    result = []
     num_classifiers = len(rankings)
     num_examples = len(rankings[0])
     num_classes = len(rankings[0][0])
+    result = []
     for exp in range(num_examples):
         rankings_modified = np.copy(rankings)
         winner = [0] * num_classes
@@ -66,5 +67,3 @@ def STV(rankings):
         result.append(winner[0])
     # print('Final result SVT: ', result)
     return index_to_label(result)
-
-
