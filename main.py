@@ -90,3 +90,5 @@ final_f1_pos = np.mean(exp_evaluation_pos)
 print(f'plurality final average f1: {final_f1_plurality}')
 print(f'SVT final average f1: {final_f1_SVT}')
 print(f'Positional scoring final average f1: {final_f1_pos}')
+print(
+    f'Ran with n={num_classifiers}, folds={n_kfold_splits}, num_exp={n_experiments}')
