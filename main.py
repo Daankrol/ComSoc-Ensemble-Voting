@@ -34,6 +34,9 @@ exp_evaluation_plurality = []
 exp_evaluation_svt = []
 exp_evaluation_pos = []
 
+weights = []
+for i in range(26):
+    weights.append(26 - (i + 1))
 
 for exp in range(n_experiments):
     print(f'=== EXPERIMENT {exp} ===')
@@ -71,7 +74,7 @@ for exp in range(n_experiments):
         rankings = np.array([c.get_ranking() for c in classifiers])
         outcome_plurality = plurality(rankings)
         outcome_SVT = STV(rankings)
-        outcome_pos = positional_scoring(rankings)
+        outcome_pos = positional_scoring(rankings, weights=weights)
         f1_plurality = f1_score(
             y_test_labels, outcome_plurality, average='weighted')
         f1_SVT = f1_score(y_test_labels, outcome_SVT, average='weighted')
@@ -91,4 +94,5 @@ print(f'plurality final average f1: {final_f1_plurality}')
 print(f'SVT final average f1: {final_f1_SVT}')
 print(f'Positional scoring final average f1: {final_f1_pos}')
 print(
-    f'Ran with n={num_classifiers}, folds={n_kfold_splits}, num_exp={n_experiments}')
+    f'Ran with n={num_classifiers}, folds={n_kfold_splits}, num_exp={n_experiments}\n \
+        using scoring vector:\n {weights}')
