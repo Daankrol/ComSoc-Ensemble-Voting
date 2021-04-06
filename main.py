@@ -32,6 +32,7 @@ for opt, arg in opts:
 n_kfold_splits = 10
 exp_evaluation_plurality = []
 exp_evaluation_svt = []
+exp_evaluation_pos = []
 
 
 for exp in range(n_experiments):
@@ -70,15 +71,22 @@ for exp in range(n_experiments):
         rankings = np.array([c.get_ranking() for c in classifiers])
         outcome_plurality = plurality(rankings)
         outcome_SVT = STV(rankings)
-        f1_plurality = f1_score(y_test_labels, outcome_plurality, average='weighted')
+        outcome_pos = positional_scoring(rankings)
+        f1_plurality = f1_score(
+            y_test_labels, outcome_plurality, average='weighted')
         f1_SVT = f1_score(y_test_labels, outcome_SVT, average='weighted')
+        f1_pos = f1_score(y_test_labels, outcome_pos, average='weighted')
         print('Plurality: ', f1_plurality)
         print('SVT: ', f1_SVT)
+        print('POS: ', f1_pos)
         exp_evaluation_plurality.append(f1_plurality)
         exp_evaluation_svt.append(f1_SVT)
+        exp_evaluation_pos.append(f1_pos)
+
 
 final_f1_plurality = np.mean(exp_evaluation_plurality)
 final_f1_SVT = np.mean(exp_evaluation_svt)
-print('plurality final average f1:', {final_f1_plurality})
-print('SVT final average f1:', {final_f1_SVT})
-
+final_f1_pos = np.mean(exp_evaluation_pos)
+print(f'plurality final average f1: {final_f1_plurality}')
+print(f'SVT final average f1: {final_f1_SVT}')
+print(f'Positional scoring final average f1: {final_f1_pos}')

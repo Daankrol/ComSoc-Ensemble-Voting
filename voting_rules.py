@@ -25,6 +25,27 @@ def plurality(rankings):
     return index_to_label(result)
 
 
+def positional_scoring(rankings, weights=None):
+    num_classifiers = len(rankings)
+    num_examples = len(rankings[0])
+    num_classes = len(rankings[0][0])
+    result = []
+    if weights is None:
+        weights = []
+        for i in range(num_classes):
+            weights.append(num_classes - (i + 1))
+    if len(weights) != 26:
+        raise Exception(
+            f'Weight vector has length {len(weights)} but should be {num_classes}')
+    for exp in range(num_examples):
+        scores = [0] * 26
+        for classifier in range(num_classifiers):
+            for alt in range(26):
+                current_alternative = rankings[classifier][exp][alt]
+                scores[current_alternative] += weights[alt]
+        max_vote = np.argmax(scores)
+        result.append(max_vote)
+    return index_to_label(result)
 
 
 def STV(rankings):
