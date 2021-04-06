@@ -1,5 +1,7 @@
 import numpy as np
 import math
+import sys
+from operator import attrgetter
 
 
 def index_to_label(indices: list):
@@ -19,10 +21,10 @@ def plurality(rankings):
             histo[top_vote] += 1
         # gets index of letter with most votes
         # In case of multiple occurrences of the maximum values, the indices corresponding to the first occurrence are returned.
-        winner = np.argmax(histo)
-        result.append(winner)
-    # print('Final result plurality: ', result)
-    return index_to_label(result)
+        winners = np.argwhere(histo == np.amax(histo)).flatten().tolist()
+        result.append(winners)
+    print('Final result plurality: ', result)
+    return result
 
 
 def positional_scoring(rankings, weights=None):
@@ -45,7 +47,7 @@ def positional_scoring(rankings, weights=None):
                 scores[current_alternative] += weights[alt]
         max_vote = np.argmax(scores)
         result.append(max_vote)
-    return index_to_label(result)
+    return result
 
 
 def STV(rankings):
@@ -87,4 +89,21 @@ def STV(rankings):
                 rankings_modified[classifier][exp][idx[0][0]] = -1
         result.append(winner[0])
     # print('Final result SVT: ', result)
-    return index_to_label(result)
+    return result
+
+def solve_for_ties(votes, classifiers):
+    print('checking ties')
+    best_classifier = max(classifiers, key=attrgetter('f1_score'))
+    # TODO Wat gaan we doen als de best_classifier niet op de top votes heeft gestemd?
+    for idx, v in enumerate(votes):
+        if len(v) > 1 #tie
+
+
+
+
+    if len(np.array(votes, dtype=object).shape) > 1: #FIXME Deze check werkt niet
+        print('found tie')
+        best_classifier = max(classifiers, key=attrgetter('f1_score'))
+        return best_classifier.get_ranking()
+    return votes
+    

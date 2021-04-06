@@ -29,7 +29,7 @@ for opt, arg in opts:
         n_experiments = int(arg)
 
 
-n_kfold_splits = 10
+n_kfold_splits = 2
 exp_evaluation_plurality = []
 exp_evaluation_svt = []
 exp_evaluation_pos = []
@@ -69,12 +69,20 @@ for exp in range(n_experiments):
                 classifier.set_dataset(
                     x_train, y_train_labels, x_test, y_test_labels)
             classifier.fit()
+            classifier.calculate_f1_score()
 
         # compute f1 score based on voting rule
         rankings = np.array([c.get_ranking() for c in classifiers])
         outcome_plurality = plurality(rankings)
         outcome_SVT = STV(rankings)
         outcome_pos = positional_scoring(rankings, weights=weights)
+
+        # resolving ties
+        outcome_plurality = solve_for_ties(outcome_plurality, classifiers)
+        print('out', outcome_plurality)
+        print('sysext')
+        sys.exit(2)
+
         f1_plurality = f1_score(
             y_test_labels, outcome_plurality, average='weighted')
         f1_SVT = f1_score(y_test_labels, outcome_SVT, average='weighted')

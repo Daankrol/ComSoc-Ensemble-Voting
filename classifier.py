@@ -5,6 +5,7 @@ from sklearn.metrics import f1_score as sk_f1_score
 class Classifier():
     def __init__(self) -> None:
         self.f1_scores = []
+        self.f1_score = 0
 
     def set_dataset(self, x_train, y_train, x_test, y_test):
         self.x_train, self.y_train = x_train, y_train
@@ -13,15 +14,9 @@ class Classifier():
     def average_f1(self):
         return np.mean(self.f1_scores)
 
-    def evaluate_and_save(self):
-        f1 = self.f1_score()
-        self.f1_scores.append(f1)
-        return f1
-
-    def f1_score(self):
+    def calculate_f1_score(self):
         predictions = self.model.predict(self.x_test)
-        f1 = sk_f1_score(self.y_test, predictions, average='weighted')
-        return f1
+        self.f1_score = sk_f1_score(self.y_test, predictions, average='weighted')
 
     def fit(self):
         self.model.fit(self.x_train, self.y_train)

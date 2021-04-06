@@ -22,7 +22,9 @@ c4[0][3] = 0
 print(c1, '\n', c2, '\n')
 
 print(r)
-print(plurality(r))
+result = plurality(r)
+print(result)
+print('!!!')
 print(STV(r))
 
 c1 = [[x for x in range(26)]]
