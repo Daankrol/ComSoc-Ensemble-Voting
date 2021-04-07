@@ -2,6 +2,7 @@
 dataset/
 dataset.zip
 .DS_Store
+weight_score.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
