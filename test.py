@@ -1,4 +1,32 @@
+import random
+import sys
+import getopt
+from prepare_dataset import Dataset
+from neural_net import NeuralNet
+from decision_tree import DecisionTree
+from svm import SVM
+from sklearn.model_selection import KFold
+from sklearn.metrics import f1_score
+import numpy as np
+import math
 from voting_rules import *
+
+n_kfold_splits = 10
+dataset = Dataset()
+crossVal = KFold(n_splits=n_kfold_splits, shuffle=False)
+for train_index, test_index in crossVal.split(dataset.features):
+    x_train, x_test = dataset.features[train_index], dataset.features[test_index]
+    y_train_labels, y_test_labels = dataset.labels[train_index], dataset.labels[test_index]
+    y_train_onehot, y_test_onehot = dataset.one_hot[train_index], dataset.one_hot[test_index]
+
+    print(f'num training: {len(y_train_labels)}')
+    print(f'num test: {len(y_test_labels)}')
+
+    B = len(y_train_labels) / 100
+    b_size = 2 ** (math.ceil(math.log2(B)))
+    print(b_size)
+    exit()
+
 
 c1 = [[x for x in range(26)]]
 c2 = [[x for x in range(26)]]
